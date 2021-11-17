@@ -1,0 +1,114 @@
+﻿@model IEnumerable<DapperAdvanced.Models.Bike>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Bikes</h2>
+
+<div class="row pb-3">
+    <div class="col-md-6">
+        <form method="get" action="@Url.Action("Index")">
+            <input name="Search" type="search" placeholder="Search" value="@ViewBag.Request.Search" />
+            <button class="btn btn-primary">Search</button>
+        </form>
+    </div>
+    <div class="col-md-4 text-end">
+        @Html.ActionLink("Create New", "Create", null,
+        new { @class = "btn btn-primary" })
+        <button class="btn btn-primary">Print</button>
+        <button class="btn btn-primary">Export to Excel</button>
+    </div>
+</div>
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Name", "Index"
+                 , new DapperAdvanced.Models.RequestModel
+                 {
+                     Search = ViewBag.Request.Search,
+                     OrderBy = "name",
+                     IsDescending = (ViewBag.Request.OrderBy == "name"
+                                     &&
+                                     ViewBag.Request.IsDescending == false) ? true : false
+                 }, null)
+        </th>
+        <th>
+            @Html.ActionLink("Type", "Index"
+                 , new DapperAdvanced.Models.RequestModel
+                 {
+                     Search = ViewBag.Request.Search,
+                     OrderBy = "type",
+                     IsDescending = (ViewBag.Request.OrderBy == "type"
+                                     &&
+                                     ViewBag.Request.IsDescending == false) ? true : false
+                 }, null)
+        </th>
+        <th>
+            @Html.ActionLink("Price", "Index"
+                  , new DapperAdvanced.Models.RequestModel
+                  {
+                      Search = ViewBag.Request.Search,
+                      OrderBy = "Price",
+                      IsDescending = (ViewBag.Request.OrderBy == "price"
+                                      &&
+                                      ViewBag.Request.IsDescending == false) ? true : false
+                  }, null)
+        </th>
+        <th>
+            @Html.ActionLink("Company", "Index"
+                 , new DapperAdvanced.Models.RequestModel
+                 {
+                     Search = ViewBag.Request.Search,
+                     OrderBy = "Company",
+                     IsDescending = (ViewBag.Request.OrderBy == "Company"
+                                     &&
+                                     ViewBag.Request.IsDescending == false) ? true : false
+                 }, null)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="row">
+    <div class="col-md-9">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+        </div>
+    <div class="col text-end">
+        Page Size: 20 30 50 All
+    </div>
+</div>
+
