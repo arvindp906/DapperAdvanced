@@ -13,7 +13,6 @@ namespace DapperAdvanced.Models
         [MaxLength(50)]
         public string Name { get; set; }
         [Required]
-        [MinLength(4)]
         [MaxLength(50)]
         public string Type { get; set; }
         [Required]

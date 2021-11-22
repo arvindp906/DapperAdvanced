@@ -11,5 +11,6 @@ namespace DapperAdvanced.Models
         public string Search { get; set; }
         public string OrderBy { get; set; }
         public bool IsDescending { get; set; }
+       
     }
 }
