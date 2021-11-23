@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web;
 using DataSet = System.Data.DataSet;
 
+
 namespace DapperAdvanced.Models
 {
     public class BikesRepository
@@ -25,11 +26,13 @@ namespace DapperAdvanced.Models
         {
             using (IDbConnection db = new SqlConnection(connectionstring))
             {
-                return db
-                    .Query<Bike>("Bikes_GetAll",
+                var results = db
+                    .Query<Bike>("Bikes_GetsPage",
                     request,
-                    commandType: CommandType.StoredProcedure)
-                    .ToList();
+                    commandType: CommandType.StoredProcedure);
+                int totalRecords = results.Count();
+                if (request.PageSize == -1) request.PageSize = totalRecords;
+                return results.ToList();
             }
         }
         public Bike Get(int Id)

@@ -1,8 +1,7 @@
 ﻿
-@model IPagedList<DapperAdvanced.Models.Bike>
+@model DapperAdvanced.Models.PagedList<DapperAdvanced.Models.Bike>
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-@using PagedList;
-@using PagedList.Mvc;
+
 
 @{
     ViewBag.Title = "Index";
@@ -23,8 +22,16 @@
         @Html.ActionLink("Create New", "Create", null,
         new { @class = "btn btn-primary" })
         <button class="btn btn-primary" type="submit" value="print" onclick="window.print()">Print</button>
-        @Html.ActionLink("ExportToExcel", "ExportToExcel", null,
-        new { @class = "btn btn-primary" })
+        <a href="@Url.Action("Index","Bike",
+                new DapperAdvanced.Models.RequestModel
+                {
+                    Search=ViewBag.request.Search,
+                OrderBy=ViewBag.request.OrderBy,
+                IsDescending= ViewBag.request.IsDescending,
+                PageSize= 5
+                })" class="=btn btn-primary">Export to Excel</a>
+        @*@Html.ActionLink("ExportToExcel", "ExportToExcel", null,
+        new { @class = "btn btn-primary" })*@
         <button class="btn btn-primary" onclick="openFullscreen()" id="toggle-fullscreen">Open Fullscreen</button>
 
         @Html.ActionLink("Refresh", "Index", null,
@@ -82,7 +89,7 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Items)
     {
         <tr>
             <td>
@@ -106,28 +113,59 @@
     }
 
 </table>
+
 <div class="pagination" style="margin-left: 400px">
-    @Html.PagedListPager(Model, i => Url.Action("Index", "Bike", new { i, search = Request.QueryString["search"] }),
-new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+
+    <a href = "@Url.Action("Index", "Bike", new DapperAdvanced.Models.RequestModel
+{
+    Search = ViewBag.request.Search,
+    OrderBy = ViewBag.Request.OrderBy,
+    IsDescending = ViewBag.request.IsDescending,
+    PageNumber = 1
+})" class="btn btn-primary"></a>
+</div>
+<div class=" col text-end ">
+    Page Size:
+    <a href="@Url.Action("Index","Bike",
+            new DapperAdvanced.Models.RequestModel
+            {
+                Search=ViewBag.request.Search,
+                OrderBy=ViewBag.request.OrderBy,
+
+                IsDescending= ViewBag.request.IsDescending,
+                PageSize= 5,
+            })" class="btn btn-primary">5</a>
+    <a href="@Url.Action("Index","Bike",
+            new DapperAdvanced.Models.RequestModel
+            {
+                Search=ViewBag.request.Search,
+                OrderBy=ViewBag.request.OrderBy,
+
+                IsDescending= ViewBag.request.IsDescending,
+                PageSize= 10,
+            })" class="btn btn-primary">10</a>
+
 </div>
 
 
 
 
-    <script>
-       
-        var elem = document.documentElement;
-        function openFullscreen() {
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { 
-                elem.msRequestFullscreen();
-            }
+
+
+<script>
+
+    var elem = document.documentElement;
+    function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
         }
-    </script>
-   
+    }
+</script>
+
 
 
 

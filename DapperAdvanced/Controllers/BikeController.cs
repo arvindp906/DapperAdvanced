@@ -8,8 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using PagedList;
-using PagedList.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Glimpse.AspNet.Tab;
@@ -26,7 +24,7 @@ namespace DapperAdvanced.Controllers
         {
             repository = new BikesRepository();
         }
-        public ActionResult Index(RequestModel request, int ? i)
+        public ActionResult Index(RequestModel request)
         {
             if (request.OrderBy == null)
             {
@@ -39,10 +37,9 @@ namespace DapperAdvanced.Controllers
 
                 };
             }
-            int PageNumber = 1;
-            int PageSize =5;
+          
             ViewBag.Request = request;
-            return View(repository.GetAll(request).ToList().ToPagedList(i ?? PageNumber ,PageSize));
+            return View(repository.GetAll(request));
         }
 
 
@@ -61,8 +58,8 @@ namespace DapperAdvanced.Controllers
         // GET: Bike/Create
         public ActionResult Create()
         {
-            var listItems = new List<string>() {  "Normal",  "Stunt", "Sport" };
-            ViewBag.listitems = listItems;
+            var Biketypes = new List<string>() {  "Normal",  "Stunt", "Sport" };
+            ViewBag.Biketypes = Biketypes;
             return View();
         }
 
@@ -99,8 +96,8 @@ namespace DapperAdvanced.Controllers
         {
 
 
-            var listItems = new List<string>() { "Normal", "Stunt", "Sport" };
-            ViewBag.listitems = listItems;
+            var Biketypes = new List<string>() { "Normal", "Stunt", "Sport" };
+            ViewBag.Biketypes = Biketypes;
 
             return View(repository.Get(id));
         }
@@ -148,58 +145,58 @@ namespace DapperAdvanced.Controllers
             return RedirectToAction("Index");
         }
 
-       
-
-        public ActionResult ExportToExcel()
-        {
-
-            BikesRepository repository = new BikesRepository();
-            RequestModel request = new RequestModel();
-            var model = repository.GetAll(request);
-
-            HSSFWorkbook templateWorkbook = new HSSFWorkbook();
-            HSSFSheet sheet = (HSSFSheet)templateWorkbook.CreateSheet("Index");
-            List<Bike> _Bike = model.ToList();
-            HSSFRow dataRow = (HSSFRow)sheet.CreateRow(0);
-            HSSFCellStyle style = (HSSFCellStyle)templateWorkbook.CreateCellStyle();
-
-            HSSFFont font = (HSSFFont)templateWorkbook.CreateFont();
-            font.Color = NPOI.HSSF.Util.HSSFColor.White.Index;
-            HSSFCell cell;
-            style.SetFont(font);
-
-            cell = (HSSFCell)dataRow.CreateCell(0);
-            cell.CellStyle = style;
-            cell.SetCellValue("No.");
-
-            cell = (HSSFCell)dataRow.CreateCell(1);
-            cell.CellStyle = style;
-            cell.SetCellValue("Name");
-            cell = (HSSFCell)dataRow.CreateCell(2);
-            cell.CellStyle = style;
-            cell.SetCellValue("Type");
-            cell = (HSSFCell)dataRow.CreateCell(3);
-            cell.CellStyle = style;
-            cell.SetCellValue("Price");
-            cell = (HSSFCell)dataRow.CreateCell(4);
-            cell.CellStyle = style;
-            cell.SetCellValue("Company");
-
-            for (int i = 0; i < _Bike.Count; i++)
-            {
-                dataRow = (HSSFRow)sheet.CreateRow(i + 1);
-                dataRow.CreateCell(0).SetCellValue(i + 1);
-                dataRow.CreateCell(1).SetCellValue(_Bike[i].Name);
-                dataRow.CreateCell(2).SetCellValue(_Bike[i].Type);
-                dataRow.CreateCell(3).SetCellValue(_Bike[i].Price);
-                dataRow.CreateCell(3).SetCellValue(_Bike[i].Company);
-            }
-            MemoryStream ms = new MemoryStream();
-            templateWorkbook.Write(ms);
-            return File(ms.ToArray(), "application/vnd.ms-excel", "Bikes.xls");
 
 
-        }
+        //public ActionResult ExportToExcel()
+        //{
+
+        //    BikesRepository repository = new BikesRepository();
+        //    RequestModel request = new RequestModel();
+        //    var model = repository.GetAll(request);
+
+        //    HSSFWorkbook templateWorkbook = new HSSFWorkbook();
+        //    HSSFSheet sheet = (HSSFSheet)templateWorkbook.CreateSheet("Index");
+        //    List<Bike> _Bike = model.ToList();
+        //    HSSFRow dataRow = (HSSFRow)sheet.CreateRow(0);
+        //    HSSFCellStyle style = (HSSFCellStyle)templateWorkbook.CreateCellStyle();
+
+        //    HSSFFont font = (HSSFFont)templateWorkbook.CreateFont();
+        //    font.Color = NPOI.HSSF.Util.HSSFColor.White.Index;
+        //    HSSFCell cell;
+        //    style.SetFont(font);
+
+        //    cell = (HSSFCell)dataRow.CreateCell(0);
+        //    cell.CellStyle = style;
+        //    cell.SetCellValue("No.");
+
+        //    cell = (HSSFCell)dataRow.CreateCell(1);
+        //    cell.CellStyle = style;
+        //    cell.SetCellValue("Name");
+        //    cell = (HSSFCell)dataRow.CreateCell(2);
+        //    cell.CellStyle = style;
+        //    cell.SetCellValue("Type");
+        //    cell = (HSSFCell)dataRow.CreateCell(3);
+        //    cell.CellStyle = style;
+        //    cell.SetCellValue("Price");
+        //    cell = (HSSFCell)dataRow.CreateCell(4);
+        //    cell.CellStyle = style;
+        //    cell.SetCellValue("Company");
+
+        //    for (int i = 0; i < _Bike.Count; i++)
+        //    {
+        //        dataRow = (HSSFRow)sheet.CreateRow(i + 1);
+        //        dataRow.CreateCell(0).SetCellValue(i + 1);
+        //        dataRow.CreateCell(1).SetCellValue(_Bike[i].Name);
+        //        dataRow.CreateCell(2).SetCellValue(_Bike[i].Type);
+        //        dataRow.CreateCell(3).SetCellValue(_Bike[i].Price);
+        //        dataRow.CreateCell(3).SetCellValue(_Bike[i].Company);
+        //    }
+        //    MemoryStream ms = new MemoryStream();
+        //    templateWorkbook.Write(ms);
+        //    return File(ms.ToArray(), "application/vnd.ms-excel", "Bikes.xls");
+
+
+        //}
     }
 }
 
